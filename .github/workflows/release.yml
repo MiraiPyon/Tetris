@@ -1,0 +1,51 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+          cache: true
+          cache-dependency-path: Tetris.csproj
+
+      - name: Restore dependencies
+        run: dotnet restore Tetris.csproj
+
+      - name: Publish Windows build
+        run: dotnet publish Tetris.csproj -c Release -r win-x64 --self-contained false -o publish/win-x64 --no-restore
+
+      - name: Package release
+        shell: pwsh
+        run: |
+          $zipPath = "Tetris-win-x64.zip"
+          if (Test-Path $zipPath) {
+            Remove-Item $zipPath -Force
+          }
+          Compress-Archive -Path "publish/win-x64/*" -DestinationPath $zipPath
+
+      - name: Upload workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: tetris-win-x64
+          path: Tetris-win-x64.zip
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: Tetris-win-x64.zip
+          generate_release_notes: true

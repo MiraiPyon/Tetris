@@ -50,6 +50,13 @@ dotnet build -c Release
 dotnet run -c Release
 ```
 
+## CI/CD
+
+This repository uses GitHub Actions:
+
+- `CI` runs on every push to `main` and on pull requests targeting `main`
+- `CD` runs when a tag that starts with `v` is pushed, builds a Windows release package, and publishes it as a GitHub Release asset
+
 ## Notes
 
 - `make run` will build the project before launching it.
