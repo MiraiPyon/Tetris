@@ -5,65 +5,83 @@ namespace Tetris
 {
     class Program
     {
+        public enum BlockColor
+        {
+            Blue,
+            Cyan,
+            Green,
+            Yellow,
+            Pink,
+            Purple,
+            Red
+        }
+        
         public const int width = 1280;
         public const int height = 720;
 
-        static Block[] LoadRotations(string colorName, string blockLetter)
+        static Block[] LoadRotations(BlockColor color, string blockLetter)
         {
             Block[] blocks = new Block[4];
+
+            string colorStr = color switch
+            {
+                BlockColor.Blue   => "blue",
+                BlockColor.Cyan   => "cyan",
+                BlockColor.Green  => "green",
+                BlockColor.Yellow => "yellow",
+                BlockColor.Pink   => "pink",
+                BlockColor.Purple => "purple",
+                BlockColor.Red    => "red",
+                _ => throw new ArgumentException("Invalid tile color!")
+            };
+
             for (int i = 1; i <= 4; i++)
             {
-                string path = $"assets/blocks/{colorName}_block/{colorName}_{blockLetter}{i}.png";
+                string path = $"assets/blocks/{colorStr}_block/{colorStr}_{blockLetter}{i}.png";
                 Texture2D tmp = Raylib.LoadTexture(path);
 
-                switch (colorName)
+                switch (color)
                 {
-                    case "blue":
-                        blocks[i-1] = new BlueBlock(width/2-tmp.Width/2, 0, tmp);
+                    case BlockColor.Blue:
+                        blocks[i-1] = new BlueBlock(width/2 - tmp.Width/2, 0, tmp);
                         break;
-                    case "cyan":
-                        blocks[i-1] = new CyanBlock(width/2-tmp.Width/2, 0, tmp);
+                    case BlockColor.Cyan:
+                        blocks[i-1] = new CyanBlock(width/2 - tmp.Width/2, 0, tmp);
                         break;
-                    case "green":
-                        blocks[i-1] = new GreenBlock(width/2-tmp.Width/2, 0, tmp);
+                    case BlockColor.Green:
+                        blocks[i-1] = new GreenBlock(width/2 - tmp.Width/2, 0, tmp);
                         break;
-                    case "yellow":
-                        blocks[i-1] = new YellowBlock(width/2-tmp.Width/2, 0, tmp);
+                    case BlockColor.Yellow:
+                        blocks[i-1] = new YellowBlock(width/2 - tmp.Width/2, 0, tmp);
                         break;
-                    case "pink":
-                        blocks[i-1] = new PinkBlock(width/2-tmp.Width/2, 0, tmp);
+                    case BlockColor.Pink:
+                        blocks[i-1] = new PinkBlock(width/2 - tmp.Width/2, 0, tmp);
                         break;
-                    case "purple":
-                        blocks[i-1] = new PurpleBlock(width/2-tmp.Width/2, 0, tmp);
+                    case BlockColor.Purple:
+                        blocks[i-1] = new PurpleBlock(width/2 - tmp.Width/2, 0, tmp);
                         break;
-                    case "red":
-                        blocks[i-1] = new RedBlock(width/2-tmp.Width/2, 0, tmp);
+                    case BlockColor.Red:
+                        blocks[i-1] = new RedBlock(width/2 - tmp.Width/2, 0, tmp);
                         break;
                 }
             }
             return blocks;
-        }
+        }   
 
         static void Main(string[] args)
         {
             Raylib.InitWindow(width, height, "Tetris");
             Raylib.SetTargetFPS(60);
 
-            Block[] blueBlocks = new Block[4];
-            Block[] cyanBlocks = new Block[4];
-            Block[] greenBlocks = new Block[4];
-            Block[] yellowBlocks = new Block[4];
-            Block[] pinkBlocks = new Block[4];
-            Block[] purpleBlocks = new Block[4];
-            Block[] redBlocks = new Block[4];
+            Block[] blueBlocks, cyanBlocks, greenBlocks, yellowBlocks, pinkBlocks, purpleBlocks, redBlocks;
 
-            blueBlocks = LoadRotations("blue", "T");
-            cyanBlocks = LoadRotations("cyan", "Z");
-            greenBlocks = LoadRotations("green", "l");
-            yellowBlocks = LoadRotations("yellow", "S");
-            pinkBlocks = LoadRotations("pink", "J");
-            purpleBlocks = LoadRotations("purple", "I");
-            redBlocks = LoadRotations("red", "O");
+            blueBlocks   = LoadRotations(BlockColor.Blue, "T");
+            cyanBlocks   = LoadRotations(BlockColor.Cyan, "Z");
+            greenBlocks  = LoadRotations(BlockColor.Green, "l");
+            yellowBlocks = LoadRotations(BlockColor.Yellow, "S");
+            pinkBlocks   = LoadRotations(BlockColor.Pink, "J");
+            purpleBlocks = LoadRotations(BlockColor.Purple, "I");
+            redBlocks    = LoadRotations(BlockColor.Red, "O");
 
             while (!Raylib.WindowShouldClose())
             {
@@ -72,7 +90,6 @@ namespace Tetris
 
                 Raylib.EndDrawing();
             }
-
             Raylib.CloseWindow();
         }
     }
