@@ -15,7 +15,7 @@ namespace Tetris
             Purple,
             Red
         }
-        
+
         public const int width = 1280;
         public const int height = 720;
 
@@ -35,7 +35,7 @@ namespace Tetris
                 _ => throw new ArgumentException("Invalid tile color!")
             };
 
-            for (int i = 1; i <= 4; i++)
+            for (int i = 1; i <= 4; ++i)
             {
                 string path = $"assets/blocks/{colorStr}_block/{colorStr}_{blockLetter}{i}.png";
                 Texture2D tmp = Raylib.LoadTexture(path);
