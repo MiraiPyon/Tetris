@@ -22,9 +22,9 @@ The input system is still being developed, but the intended controls are:
 
 - `Left` / `Right` - move the active piece
 - `Down` - soft drop
-- 'Up' - rotate the block
+- `Up` - rotate the block
 - `Space` - hard drop
-- 'Esc' - pause / continue game
+- `Esc` - pause / continue game
 
 
 ## Build and Run
@@ -56,7 +56,6 @@ This repository uses GitHub Actions:
 ## Notes
 
 - `make run` will build the project before launching it.
-- The game logic is still in progress, so some classes are currently placeholders.
 - The project uses Raylib-cs for rendering and window management.
 
 ## License
