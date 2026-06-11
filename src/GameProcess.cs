@@ -2,26 +2,30 @@ using Raylib_cs;
 
 namespace Tetris
 {
-    public static class Game
+    public static class GameProcess
     {
         public static void Update()
         {
-            switch (Program.currentState)
+            switch (GameStateManager.CurrentState)
             {
                 case GameState.MainMenu:
                     MainMenu.Update();
                     break;
 
                 case GameState.Gameplay:
+                    GamePlay.Update();
+                    break;
+
+                case GameState.Paused:
+                    PauseMenu.Update();
                     break;
 
                 case GameState.GameOver:
-                    if (Raylib.IsKeyPressed(KeyboardKey.KEY_ENTER))
-                    {
-                        Program.currentState = GameState.MainMenu;
-                    }
+                    GameOver.Update();
                     break;
             }
+
+            AudioManager.Update();
         }
 
         public static void Draw()
@@ -29,7 +33,7 @@ namespace Tetris
             Raylib.BeginDrawing();
             Raylib.ClearBackground(Color.BLACK);
 
-            switch (Program.currentState)
+            switch (GameStateManager.CurrentState)
             {
                 case GameState.MainMenu:
                     MainMenu.Draw();
@@ -37,13 +41,20 @@ namespace Tetris
 
                 case GameState.Gameplay:
                     Board.Draw();
+                    GamePlay.Draw();
+                    break;
+
+                case GameState.Paused:
+                    Board.Draw();
+                    GamePlay.Draw();
+                    PauseMenu.Draw();
                     break;
 
                 case GameState.GameOver:
-                    Raylib.DrawText("GAME OVER!", Program.width / 2 - 120, Program.height / 2 - 50, 50, Color.RED);
-                    Raylib.DrawText("PRESS ENTER TO RETURN TO MAIN MENU", Program.width / 2 - 220, Program.height / 2 + 20, 20, Color.WHITE);
+                    GameOver.Draw();
                     break;
             }
+
             Raylib.EndDrawing();
         }
     }

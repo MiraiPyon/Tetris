@@ -5,12 +5,23 @@ namespace Tetris
 {
     public static class Board
     {
-        const float gridSize = 32f;
-        const float miniBoardSize = 192f;
-        const float boardWidth = 352f;
-        const float boardHeight = 672f;
-        public static float boardX = (Program.width - boardWidth) / 2f;
-        public static float boardY = (Program.height - boardHeight) / 2f;
+        public const int Columns = 10;
+        public const int Rows = 20;
+        public const float GridSize = 32f;
+        public const float MiniBoardSize = 192f;
+        public const float BoardWidth = 352f;
+        public const float BoardHeight = 672f;
+        public static readonly float BoardX = (Program.WindowWidth - BoardWidth) / 2f;
+        public static readonly float BoardY = (Program.WindowHeight - BoardHeight) / 2f;
+        public static readonly float PlayfieldX = BoardX + GridSize / 2f;
+        public static readonly float PlayfieldY = BoardY + GridSize / 2f;
+        public static readonly float MiniBoardX = BoardX + BoardWidth + Program.WindowWidth / 32f;
+        public static readonly float MiniBoardY = BoardY;
+        public static Rectangle PauseButtonBounds => new Rectangle(
+            Program.WindowWidth / 64f,
+            Program.WindowHeight / 64f,
+            BoardManager.PauseTexture.Width,
+            BoardManager.PauseTexture.Height);
 
         public static void Draw()
         {
@@ -28,7 +39,7 @@ namespace Tetris
             Raylib.DrawTexturePro(
                 background,
                 new Rectangle(0f, 0f, background.Width, background.Height),
-                new Rectangle(0f, 0f, Program.width, Program.height),
+                new Rectangle(0f, 0f, Program.WindowWidth, Program.WindowHeight),
                 Vector2.Zero,
                 0f,
                 Color.WHITE);
@@ -41,7 +52,7 @@ namespace Tetris
             Raylib.DrawTexturePro(
                 mainBoard,
                 new Rectangle(0f, 0f, mainBoard.Width, mainBoard.Height),
-                new Rectangle(boardX, boardY, boardWidth, boardHeight),
+                new Rectangle(BoardX, BoardY, BoardWidth, BoardHeight),
                 Vector2.Zero,
                 0f,
                 Color.WHITE);
@@ -49,11 +60,11 @@ namespace Tetris
 
         private static void DrawGrid()
         {
-            for (float i = 0; i < 20; ++i)
+            for (float i = 0; i < Rows; ++i)
             {
-                for (float j = 0; j < 10; ++j)
+                for (float j = 0; j < Columns; ++j)
                 {
-                    DrawOneGrid(j * gridSize + boardX + gridSize / 2f, i * gridSize + boardY + gridSize / 2f);
+                    DrawOneGrid(j * GridSize + PlayfieldX, i * GridSize + PlayfieldY);
                 }
             }
         }
@@ -78,7 +89,7 @@ namespace Tetris
             Raylib.DrawTexturePro(
                 miniBoard,
                 new Rectangle(0f, 0f, miniBoard.Width, miniBoard.Height),
-                new Rectangle(boardX + boardWidth + Program.width / 32, boardY, miniBoardSize, miniBoardSize),
+                new Rectangle(MiniBoardX, MiniBoardY, MiniBoardSize, MiniBoardSize),
                 Vector2.Zero,
                 0f,
                 Color.WHITE);
@@ -91,7 +102,7 @@ namespace Tetris
             Raylib.DrawTexturePro(
                 pauseTexture,
                 new Rectangle(0f, 0f, pauseTexture.Width, pauseTexture.Height),
-                new Rectangle(Program.width / 64, Program.height / 64, pauseTexture.Width, pauseTexture.Height),
+                PauseButtonBounds,
                 Vector2.Zero,
                 0f,
                 Color.WHITE);

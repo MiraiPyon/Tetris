@@ -4,15 +4,18 @@ namespace Tetris
     {
         public static void LoadAll()
         {
+            AudioManager.LoadAll();
             BoardManager.LoadAll();
             MainMenuManager.LoadAll();
             BlockManager.LoadAll();
         }
+
         public static void UnloadAll()
         {
-            BoardManager.UnloadAll();
-            MainMenuManager.UnloadAll();
             BlockManager.UnloadAll();
+            MainMenuManager.UnloadAll();
+            BoardManager.UnloadAll();
+            AudioManager.UnloadAll();
         }
     }
 }

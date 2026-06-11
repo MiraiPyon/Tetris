@@ -22,14 +22,10 @@ The input system is still being developed, but the intended controls are:
 
 - `Left` / `Right` - move the active piece
 - `Down` - soft drop
+- 'Up' - rotate the block
 - `Space` - hard drop
-- `Up` or `X` - rotate clockwise
-- `Z` - rotate counterclockwise
-- `C` or `Left Shift` - hold piece
-- `P` or `Esc` - pause
-- `M` - mute or unmute audio
-- `N` - switch background music
-- `Enter` - start or restart
+- 'Esc' - pause / continue game
+
 
 ## Build and Run
 

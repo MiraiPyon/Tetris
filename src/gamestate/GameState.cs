@@ -4,6 +4,7 @@ namespace Tetris
     {
         MainMenu,
         Gameplay,
+        Paused,
         GameOver,
         Exit
     }

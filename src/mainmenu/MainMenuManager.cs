@@ -8,7 +8,7 @@ namespace Tetris
 
         public static void LoadAll()
         {
-            MenuBackground = Raylib.LoadTexture("assets/background/background.png");
+            MenuBackground = Raylib.LoadTexture("assets/background/color.png");
         }
 
         public static void UnloadAll()

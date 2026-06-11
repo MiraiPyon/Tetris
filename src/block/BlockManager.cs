@@ -1,4 +1,3 @@
-using System;
 using Raylib_cs;
 
 namespace Tetris
@@ -16,95 +15,49 @@ namespace Tetris
 
     public static class BlockManager
     {
-        public static Block[] BlueBlocks { get; private set; } = null!;
-        public static Block[] CyanBlocks { get; private set; } = null!;
-        public static Block[] GreenBlocks { get; private set; } = null!;
-        public static Block[] YellowBlocks { get; private set; } = null!;
-        public static Block[] PinkBlocks { get; private set; } = null!;
-        public static Block[] PurpleBlocks { get; private set; } = null!;
-        public static Block[] RedBlocks { get; private set; } = null!;
+        public static Texture2D BlueTile { get; private set; }
+        public static Texture2D CyanTile { get; private set; }
+        public static Texture2D GreenTile { get; private set; }
+        public static Texture2D YellowTile { get; private set; }
+        public static Texture2D PinkTile { get; private set; }
+        public static Texture2D PurpleTile { get; private set; }
+        public static Texture2D RedTile { get; private set; }
 
         public static void LoadAll()
         {
-            BlueBlocks   = LoadRotations(BlockColor.Blue, "T");
-            CyanBlocks   = LoadRotations(BlockColor.Cyan, "Z");
-            GreenBlocks  = LoadRotations(BlockColor.Green, "l");
-            YellowBlocks = LoadRotations(BlockColor.Yellow, "S");
-            PinkBlocks   = LoadRotations(BlockColor.Pink, "J");
-            PurpleBlocks = LoadRotations(BlockColor.Purple, "I");
-            RedBlocks    = LoadRotations(BlockColor.Red, "O");
+            BlueTile = Raylib.LoadTexture("assets/blocks/blue_block/blue_block.png");
+            CyanTile = Raylib.LoadTexture("assets/blocks/cyan_block/cyan_block.png");
+            GreenTile = Raylib.LoadTexture("assets/blocks/green_block/green_block.png");
+            YellowTile = Raylib.LoadTexture("assets/blocks/yellow_block/yellow_block.png");
+            PinkTile = Raylib.LoadTexture("assets/blocks/pink_block/pink_block.png");
+            PurpleTile = Raylib.LoadTexture("assets/blocks/purple_block/purple_block.png");
+            RedTile = Raylib.LoadTexture("assets/blocks/red_block/red_block.png");
         }
 
         public static void UnloadAll()
         {
-            UnloadRotations(BlueBlocks);
-            UnloadRotations(CyanBlocks);
-            UnloadRotations(GreenBlocks);
-            UnloadRotations(YellowBlocks);
-            UnloadRotations(PinkBlocks);
-            UnloadRotations(PurpleBlocks);
-            UnloadRotations(RedBlocks);
+            Raylib.UnloadTexture(BlueTile);
+            Raylib.UnloadTexture(CyanTile);
+            Raylib.UnloadTexture(GreenTile);
+            Raylib.UnloadTexture(YellowTile);
+            Raylib.UnloadTexture(PinkTile);
+            Raylib.UnloadTexture(PurpleTile);
+            Raylib.UnloadTexture(RedTile);
         }
 
-        private static Block[] LoadRotations(BlockColor color, string blockLetter)
+        public static Texture2D GetTileTexture(BlockColor color)
         {
-            Block[] blocks = new Block[4];
-
-            string colorStr = color switch
+            return color switch
             {
-                BlockColor.Blue   => "blue",
-                BlockColor.Cyan   => "cyan",
-                BlockColor.Green  => "green",
-                BlockColor.Yellow => "yellow",
-                BlockColor.Pink   => "pink",
-                BlockColor.Purple => "purple",
-                BlockColor.Red    => "red",
-                _ => throw new ArgumentException("Invalid tile color!")
+                BlockColor.Blue => BlueTile,
+                BlockColor.Cyan => CyanTile,
+                BlockColor.Green => GreenTile,
+                BlockColor.Yellow => YellowTile,
+                BlockColor.Pink => PinkTile,
+                BlockColor.Purple => PurpleTile,
+                BlockColor.Red => RedTile,
+                _ => throw new System.ArgumentOutOfRangeException(nameof(color), "Invalid tile color.")
             };
-
-            for (int i = 1; i <= 4; ++i)
-            {
-                string path = $"assets/blocks/{colorStr}_block/{colorStr}_{blockLetter}{i}.png";
-                Texture2D tmp = Raylib.LoadTexture(path);
-
-                int startX = Program.width / 2 - tmp.Width / 2;
-
-                switch (color)
-                {
-                    case BlockColor.Blue:
-                        blocks[i-1] = new BlueBlock(startX, 0, tmp);
-                        break;
-                    case BlockColor.Cyan:   
-                        blocks[i-1] = new CyanBlock(startX, 0, tmp);
-                        break;
-                    case BlockColor.Green:
-                        blocks[i-1] = new GreenBlock(startX, 0, tmp);
-                        break;
-                    case BlockColor.Yellow:
-                        blocks[i-1] = new YellowBlock(startX, 0, tmp);
-                        break;
-                    case BlockColor.Pink:
-                        blocks[i-1] = new PinkBlock(startX, 0, tmp);
-                        break;
-                    case BlockColor.Purple:
-                        blocks[i-1] = new PurpleBlock(startX, 0, tmp);
-                        break;
-                    case BlockColor.Red:
-                        blocks[i-1] = new RedBlock(startX, 0, tmp);
-                        break;
-                }
-            }
-            return blocks;
-        }
-
-        private static void UnloadRotations(Block[]? blocks)
-        {
-            if (blocks == null) return;
-
-            foreach (Block block in blocks)
-            {
-                Raylib.UnloadTexture(block.texture);
-            }
         }
     }
 }

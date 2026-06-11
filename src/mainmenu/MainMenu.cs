@@ -6,16 +6,22 @@ namespace Tetris
     public static class MainMenu
     {
         private static readonly Rectangle PlayButton = new Rectangle(
-            Program.width / 2f - 100f,
-            Program.height / 2f - 20f,
-            200f,
-            50f);
+            Program.WindowWidth / 2f - 190f,
+            Program.WindowHeight / 2f - 40f,
+            380f,
+            58f);
+
+        private static readonly Rectangle SettingsButton = new Rectangle(
+            Program.WindowWidth / 2f - 190f,
+            Program.WindowHeight / 2f + 48f,
+            380f,
+            58f);
 
         private static readonly Rectangle ExitButton = new Rectangle(
-            Program.width / 2f - 100f,
-            Program.height / 2f + 50f,
-            200f,
-            50f);
+            Program.WindowWidth / 2f - 190f,
+            Program.WindowHeight / 2f + 136f,
+            380f,
+            58f);
 
         public static void Update()
         {
@@ -23,12 +29,14 @@ namespace Tetris
 
             if (Raylib.IsKeyPressed(KeyboardKey.KEY_ENTER))
             {
-                Program.currentState = GameState.Gameplay;
+                AudioManager.PlayClick();
+                StartGame();
             }
 
             if (Raylib.IsKeyPressed(KeyboardKey.KEY_ESCAPE))
             {
-                Program.currentState = GameState.Exit;
+                AudioManager.PlayClick();
+                GameStateManager.ChangeState(GameState.Exit);
             }
 
             if (!Raylib.IsMouseButtonPressed(MouseButton.MOUSE_BUTTON_LEFT))
@@ -38,20 +46,34 @@ namespace Tetris
 
             if (Raylib.CheckCollisionPointRec(mousePosition, PlayButton))
             {
-                Program.currentState = GameState.Gameplay;
+                AudioManager.PlayClick();
+                StartGame();
+            }
+            else if (Raylib.CheckCollisionPointRec(mousePosition, SettingsButton))
+            {
+                AudioManager.PlayClick();
             }
             else if (Raylib.CheckCollisionPointRec(mousePosition, ExitButton))
             {
-                Program.currentState = GameState.Exit;
+                AudioManager.PlayClick();
+                GameStateManager.ChangeState(GameState.Exit);
             }
+        }
+
+        private static void StartGame()
+        {
+            GamePlay.StartNewGame();
+            GameStateManager.ChangeState(GameState.Gameplay);
         }
 
         public static void Draw()
         {
             DrawBackground();
-            DrawTitle();
-            DrawButton(PlayButton, "PLAY");
-            DrawButton(ExitButton, "EXIT");
+            UiRenderer.DrawOverlay(70);
+            UiRenderer.DrawTitle("TETRIS", 120, 118);
+            UiRenderer.DrawTextButton(PlayButton, "PLAY", 40);
+            UiRenderer.DrawTextButton(SettingsButton, "SETTINGS", 40);
+            UiRenderer.DrawTextButton(ExitButton, "EXIT", 40);
         }
 
         private static void DrawBackground()
@@ -61,35 +83,10 @@ namespace Tetris
             Raylib.DrawTexturePro(
                 background,
                 new Rectangle(0f, 0f, background.Width, background.Height),
-                new Rectangle(0f, 0f, Program.width, Program.height),
+                new Rectangle(0f, 0f, Program.WindowWidth, Program.WindowHeight),
                 Vector2.Zero,
                 0f,
                 Color.WHITE);
-        }
-
-        private static void DrawTitle()
-        {
-            const string title = "TETRIS GAME";
-            const int fontSize = 45;
-
-            int textWidth = Raylib.MeasureText(title, fontSize);
-            Raylib.DrawText(title, Program.width / 2 - textWidth / 2, Program.height / 2 - 120, fontSize, Color.WHITE);
-        }
-
-        private static void DrawButton(Rectangle button, string label)
-        {
-            Vector2 mousePosition = Raylib.GetMousePosition();
-            bool isHovered = Raylib.CheckCollisionPointRec(mousePosition, button);
-            Color buttonColor = isHovered ? Color.LIGHTGRAY : Color.GRAY;
-
-            Raylib.DrawRectangleRec(button, buttonColor);
-
-            const int fontSize = 20;
-            int textWidth = Raylib.MeasureText(label, fontSize);
-            int textX = (int)(button.X + button.Width / 2f - textWidth / 2f);
-            int textY = (int)(button.Y + button.Height / 2f - fontSize / 2f);
-
-            Raylib.DrawText(label, textX, textY, fontSize, Color.BLACK);
         }
     }
 }
