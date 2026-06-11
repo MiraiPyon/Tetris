@@ -8,7 +8,10 @@ namespace Tetris
         public const int Columns = 10;
         public const int Rows = 20;
         public const float GridSize = 32f;
-        public const float MiniBoardSize = 192f;
+        public const float MiniBoardSize = 224f;
+        public const int NextGridColumns = 5;
+        public const int NextGridRows = 5;
+        public const float NextGridCellSize = MiniBoardSize / 6f;
         public const float BoardWidth = 352f;
         public const float BoardHeight = 672f;
         public static readonly float BoardX = (Program.WindowWidth - BoardWidth) / 2f;
@@ -17,6 +20,8 @@ namespace Tetris
         public static readonly float PlayfieldY = BoardY + GridSize / 2f;
         public static readonly float MiniBoardX = BoardX + BoardWidth + Program.WindowWidth / 32f;
         public static readonly float MiniBoardY = BoardY;
+        public static readonly float NextGridX = MiniBoardX + MiniBoardSize / 12f;
+        public static readonly float NextGridY = MiniBoardY + MiniBoardSize / 12f;
         public static Rectangle PauseButtonBounds => new Rectangle(
             Program.WindowWidth / 64f,
             Program.WindowHeight / 64f,
@@ -28,7 +33,6 @@ namespace Tetris
             DrawBackground();
             DrawMainBoard();
             DrawGrid();
-            DrawMiniBoard();
             DrawPauseButton();
         }
 
@@ -82,7 +86,7 @@ namespace Tetris
                 Color.WHITE);
         }
 
-        private static void DrawMiniBoard()
+        public static void DrawMiniBoardFrame()
         {
             Texture2D miniBoard = BoardManager.MiniBoardTexture;
 

@@ -7,19 +7,13 @@ namespace Tetris
     {
         private static readonly Rectangle PlayButton = new Rectangle(
             Program.WindowWidth / 2f - 190f,
-            Program.WindowHeight / 2f - 40f,
-            380f,
-            58f);
-
-        private static readonly Rectangle SettingsButton = new Rectangle(
-            Program.WindowWidth / 2f - 190f,
-            Program.WindowHeight / 2f + 48f,
+            Program.WindowHeight / 2f + 30f,
             380f,
             58f);
 
         private static readonly Rectangle ExitButton = new Rectangle(
             Program.WindowWidth / 2f - 190f,
-            Program.WindowHeight / 2f + 136f,
+            Program.WindowHeight / 2f + 150f,
             380f,
             58f);
 
@@ -49,11 +43,7 @@ namespace Tetris
                 AudioManager.PlayClick();
                 StartGame();
             }
-            else if (Raylib.CheckCollisionPointRec(mousePosition, SettingsButton))
-            {
-                AudioManager.PlayClick();
-            }
-            else if (Raylib.CheckCollisionPointRec(mousePosition, ExitButton))
+            if (Raylib.CheckCollisionPointRec(mousePosition, ExitButton))
             {
                 AudioManager.PlayClick();
                 GameStateManager.ChangeState(GameState.Exit);
@@ -70,9 +60,8 @@ namespace Tetris
         {
             DrawBackground();
             UiRenderer.DrawOverlay(70);
-            UiRenderer.DrawTitle("TETRIS", 120, 118);
+            UiRenderer.DrawTitle("TETRIS", 160, 118);
             UiRenderer.DrawTextButton(PlayButton, "PLAY", 40);
-            UiRenderer.DrawTextButton(SettingsButton, "SETTINGS", 40);
             UiRenderer.DrawTextButton(ExitButton, "EXIT", 40);
         }
 

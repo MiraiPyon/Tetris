@@ -16,8 +16,7 @@ namespace Tetris
         private static bool isStarted;
 
         public static int Score => score;
-        public static int Lines => lines;
-        public static int Level => lines / 10;
+        private static int DifficultyLevel => lines / 10;
 
         public static void StartNewGame()
         {
@@ -64,7 +63,7 @@ namespace Tetris
             DrawLockedBlocks();
             DrawPiece(currentPiece);
             DrawNextPiece();
-            DrawStats();
+            DrawScore();
         }
 
         private static void HandleInput()
@@ -136,7 +135,7 @@ namespace Tetris
 
         private static float GetFallInterval()
         {
-            return MathF.Max(0.1f, 0.65f - Level * 0.05f);
+            return MathF.Max(0.1f, 0.65f - DifficultyLevel * 0.05f);
         }
 
         private static void StepDown()
@@ -271,7 +270,7 @@ namespace Tetris
                 _ => clearedLines * 200
             };
 
-            return baseScore * (Level + 1);
+            return baseScore * (DifficultyLevel + 1);
         }
 
         private static bool IsRowFull(int row)
@@ -381,41 +380,77 @@ namespace Tetris
 
         private static void DrawNextPiece()
         {
+            DrawNextBoardGrid();
+
             CellOffset[] cells = nextPiece.GetCells(0);
             GetBounds(cells, out int minX, out int minY, out int maxX, out int maxY);
 
-            float pieceWidth = (maxX - minX + 1) * Board.GridSize;
-            float pieceHeight = (maxY - minY + 1) * Board.GridSize;
-            float originX = Board.MiniBoardX + (Board.MiniBoardSize - pieceWidth) / 2f - minX * Board.GridSize;
-            float originY = Board.MiniBoardY + (Board.MiniBoardSize - pieceHeight) / 2f - minY * Board.GridSize;
+            int pieceColumns = maxX - minX + 1;
+            int pieceRows = maxY - minY + 1;
+            int startColumn = (int)MathF.Ceiling((Board.NextGridColumns - pieceColumns) / 2f);
+            int startRow = 1 + (int)MathF.Ceiling((Board.NextGridRows - 1 - pieceRows) / 2f);
 
             foreach (CellOffset cell in cells)
             {
-                DrawTileAt(nextPiece.Color, originX + cell.X * Board.GridSize, originY + cell.Y * Board.GridSize);
+                DrawTileAt(
+                    nextPiece.Color,
+                    Board.NextGridX + (startColumn + cell.X - minX) * Board.NextGridCellSize,
+                    Board.NextGridY + (startRow + cell.Y - minY) * Board.NextGridCellSize,
+                    Board.NextGridCellSize);
+            }
+
+            Board.DrawMiniBoardFrame();
+        }
+
+        private static void DrawNextBoardGrid()
+        {
+            Texture2D texture = BoardManager.GridTexture;
+
+            for (int row = 0; row < Board.NextGridRows; row++)
+            {
+                for (int column = 0; column < Board.NextGridColumns; column++)
+                {
+                    float x = Board.NextGridX + column * Board.NextGridCellSize;
+                    float y = Board.NextGridY + row * Board.NextGridCellSize;
+
+                    Raylib.DrawTexturePro(
+                        texture,
+                        new Rectangle(0f, 0f, texture.Width, texture.Height),
+                        new Rectangle(x, y, Board.NextGridCellSize, Board.NextGridCellSize),
+                        Vector2.Zero,
+                        0f,
+                        Color.WHITE);
+                }
             }
         }
 
-        private static void DrawTileAt(BlockColor color, float x, float y)
+        private static void DrawTileAt(BlockColor color, float x, float y, float size)
         {
             Texture2D texture = BlockManager.GetTileTexture(color);
 
             Raylib.DrawTexturePro(
                 texture,
                 new Rectangle(0f, 0f, texture.Width, texture.Height),
-                new Rectangle(x, y, Board.GridSize, Board.GridSize),
+                new Rectangle(x, y, size, size),
                 Vector2.Zero,
                 0f,
                 Color.WHITE);
         }
 
-        private static void DrawStats()
+        private static void DrawScore()
         {
-            int x = (int)(Board.MiniBoardX + 8f);
-            int y = (int)(Board.MiniBoardY + Board.MiniBoardSize + 24f);
+            int centerX = (int)(Board.BoardX / 2f);
 
-            Raylib.DrawText($"SCORE {score}", x, y, 24, Color.WHITE);
-            Raylib.DrawText($"LINES {lines}", x, y + 36, 24, Color.WHITE);
-            Raylib.DrawText($"LEVEL {Level + 1}", x, y + 72, 24, Color.WHITE);
+            DrawHudTextCentered("SCORE", centerX, (int)(Board.BoardY + 118f), 56);
+            DrawHudTextCentered(score.ToString(), centerX, (int)(Board.BoardY + 184f), 80);
+        }
+
+        private static void DrawHudTextCentered(string text, int centerX, int y, int fontSize)
+        {
+            int x = centerX - Raylib.MeasureText(text, fontSize) / 2;
+
+            Raylib.DrawText(text, x + 4, y + 4, fontSize, new Color(0, 0, 0, 95));
+            Raylib.DrawText(text, x, y, fontSize, Color.WHITE);
         }
 
         private static void GetBounds(CellOffset[] cells, out int minX, out int minY, out int maxX, out int maxY)
