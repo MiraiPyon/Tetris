@@ -99,10 +99,7 @@ namespace Tetris
 
         private static void UnloadRotations(Block[]? blocks)
         {
-            if (blocks == null)
-            {
-                return;
-            }
+            if (blocks == null) return;
 
             foreach (Block block in blocks)
             {
